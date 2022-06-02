@@ -16,7 +16,12 @@ RUN apt-get -q update \
     && curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key|apt-key add - \
     && apt-add-repository "deb http://apt.llvm.org/`lsb_release -c | cut -f2`/ llvm-toolchain-`lsb_release -c | cut -f2`-$LLVM_VERSION main" || true \
     && apt-get -q update \
-    && apt-get install -y --no-install-recommends git ssh zlib1g-dev automake autoconf cmake make ninja-build gcc g++ gfortran build-essential libtool gfortran llvm-$LLVM_VERSION-dev clang-format clang-$LLVM_VERSION libclang-$LLVM_VERSION-dev libomp-$LLVM_VERSION-dev libblas-dev libeigen3-dev libboost-dev python3 python3-pip \
+    && apt-get install -y --no-install-recommends git ssh zsh zlib1g-dev automake autoconf cmake make ninja-build gcc g++ gfortran build-essential libtool gfortran llvm-$LLVM_VERSION-dev clang-format clang-$LLVM_VERSION libclang-$LLVM_VERSION-dev libomp-$LLVM_VERSION-dev libblas-dev libeigen3-dev libboost-dev python3 python3-pip \
+    && mkdir /.software \
+    && chown -R $USERNAME /.software
+    && curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage -o /.software/nvim.appimage && chmod u+x /.software/nvim.appimage \
+    && /.software/nvim/appimage --appimage-extract \
+    && ln -s /squashfs-root/AppRun /bin/nvim \
     && python3 -m pip install --upgrade pip setuptools \
     && python3 -m pip install lit pathlib2 \
     && touch /usr/lib/llvm-$LLVM_VERSION/bin/yaml-bench \
